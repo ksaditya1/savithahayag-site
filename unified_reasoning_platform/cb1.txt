@@ -1,0 +1,278 @@
+let secretWord = '';
+let wordLen = 5;
+let score = 100;
+let attempts = 0;
+let gameActive = false;
+let gameMode = 'vsComputer';
+
+let timer = 15;
+let timerInterval;
+
+const wordLists = {
+    3: ['CAT','DOG','MAP','SUN','BED','BOX','PAN','AIR','ARM','ART'],
+    4: ['FIRE','GOLD','HEAT','IRON','LAMP','MIND','RACE','SALT','WAVE','BIRD'],
+    5: ['CRANE','FLINT','BRAVE','HEART','LEMON','MUSIC','NIGHT','RIVER','STORY','TIGER'],
+    6: ['ANIMAL','BRIDGE','CASTLE','EMPIRE','GARDEN','METHOD','NATURE','PLANET','RABBIT','TRAVEL'],
+    7: ['BLANKET','CAPTAIN','DOLPHIN','ELEGANT','FACTORY','HOLIDAY','IMAGINE','JOURNEY','READING','THUNDER']
+};
+
+function setMode(mode) {
+    gameMode = mode;
+
+    document.getElementById('modeVsComputer').classList.toggle('active', mode === 'vsComputer');
+    document.getElementById('modeTwoPlayer').classList.toggle('active', mode === 'twoPlayer');
+
+    document.getElementById('twoPlayerSetup').classList.toggle('hidden', mode !== 'twoPlayer');
+    document.getElementById('vsComputerSetup').classList.toggle('hidden', mode !== 'vsComputer');
+}
+
+function setLen(n) {
+    wordLen = n;
+
+    document.querySelectorAll('.word-len-btns button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    document.getElementById('len' + n).classList.add('active');
+}
+
+function startVsComputer() {
+    const list = wordLists[wordLen];
+    secretWord = list[Math.floor(Math.random() * list.length)];
+    beginGame();
+}
+
+function startTwoPlayer() {
+    const val = document.getElementById('secretWordInput').value.trim().toUpperCase();
+    const err = document.getElementById('secretError');
+
+    if (val.length !== wordLen) {
+        err.textContent = `Word must be exactly ${wordLen} letters.`;
+        return;
+    }
+
+    if (!/^[A-Z]+$/.test(val)) {
+        err.textContent = 'Letters only please.';
+        return;
+    }
+
+    secretWord = val;
+    beginGame();
+}
+
+function beginGame() {
+    score = 100;
+    attempts = 0;
+    gameActive = true;
+
+    document.getElementById('setupCard').classList.add('hidden');
+    document.getElementById('scoreBar').classList.remove('hidden');
+    document.getElementById('guessRow').classList.remove('hidden');
+    document.getElementById('kbHint').classList.remove('hidden');
+    document.getElementById('guessError').classList.remove('hidden');
+    document.getElementById('historySection').classList.remove('hidden');
+
+    document.getElementById('historyList').innerHTML = '';
+    document.getElementById('resultCard').classList.add('hidden');
+
+    document.getElementById('guessInput').focus();
+
+    updateScore();
+    startTimer();
+}
+
+function updateScore() {
+    document.getElementById('scoreVal').textContent = score;
+
+    document.getElementById('attemptsVal').textContent =
+        attempts + ' attempt' + (attempts !== 1 ? 's' : '');
+}
+
+function startTimer() {
+    clearInterval(timerInterval);
+
+    timer = 15;
+    updateTimer();
+
+    timerInterval = setInterval(() => {
+        timer--;
+        updateTimer();
+
+        if (timer <= 0) {
+            score = Math.max(0, score - 5);
+            updateScore();
+
+            if (score === 0) {
+                endGame(false);
+                return;
+            }
+
+            timer = 15;
+        }
+    }, 1000);
+}
+
+function updateTimer() {
+    const mins = Math.floor(timer / 60);
+    const secs = timer % 60;
+
+    document.getElementById('timerVal').textContent =
+        `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+}
+
+function evaluate(guess, secret) {
+    const result = Array(secret.length).fill('zero');
+
+    const secretArr = secret.split('');
+    const guessArr = guess.split('');
+
+    const usedSecret = Array(secret.length).fill(false);
+    const usedGuess = Array(secret.length).fill(false);
+
+    for (let i = 0; i < guessArr.length; i++) {
+        if (guessArr[i] === secretArr[i]) {
+            result[i] = 'cow';
+            usedSecret[i] = true;
+            usedGuess[i] = true;
+        }
+    }
+
+    for (let i = 0; i < guessArr.length; i++) {
+        if (usedGuess[i]) continue;
+
+        for (let j = 0; j < secretArr.length; j++) {
+            if (!usedSecret[j] && guessArr[i] === secretArr[j]) {
+                result[i] = 'bull';
+                usedSecret[j] = true;
+                break;
+            }
+        }
+    }
+
+    return result;
+}
+
+function submitGuess() {
+    if (!gameActive) return;
+
+    const input = document.getElementById('guessInput');
+    const guess = input.value.trim().toUpperCase();
+    const errEl = document.getElementById('guessError');
+
+    errEl.textContent = '';
+
+    if (guess.length !== wordLen) {
+        errEl.textContent = `Enter exactly ${wordLen} letters.`;
+        return;
+    }
+
+    if (!/^[A-Z]+$/.test(guess)) {
+        errEl.textContent = 'Letters only please.';
+        return;
+    }
+
+    attempts++;
+    score = Math.max(0, score - 5);
+
+    updateScore();
+
+    const result = evaluate(guess, secretWord);
+
+    const cows = result.filter(r => r === 'cow').length;
+    const bulls = result.filter(r => r === 'bull').length;
+
+    addHistoryEntry(guess, result, cows, bulls);
+
+    input.value = '';
+
+    if (cows === wordLen) {
+        endGame(true);
+    } else if (score === 0) {
+        endGame(false);
+    } else {
+        startTimer();
+    }
+
+    input.focus();
+}
+
+function addHistoryEntry(guess, result, cows, bulls) {
+    const list = document.getElementById('historyList');
+    const entry = document.createElement('div');
+
+    entry.className = 'guess-entry';
+
+    const tilesHtml = guess.split('').map((ch, i) =>
+        `<div class="tile ${result[i]}-tile">${ch}</div>`
+    ).join('');
+
+    let resultHtml = '';
+
+    if (cows > 0) {
+        resultHtml += `<span class="cow-count">🟡 ${cows} COW${cows > 1 ? 'S' : ''}</span>`;
+    }
+
+    if (bulls > 0) {
+        resultHtml += `<span class="bull-count">🔵 ${bulls} BULL${bulls > 1 ? 'S' : ''}</span>`;
+    }
+
+    if (cows === 0 && bulls === 0) {
+        resultHtml += `<span style="color:var(--muted)">⚫ ZERO</span>`;
+    }
+
+    entry.innerHTML = `
+        <span class="guess-num">#${attempts}</span>
+        <div class="letter-tiles">${tilesHtml}</div>
+        <div class="guess-result">${resultHtml}</div>
+    `;
+
+    list.prepend(entry);
+}
+
+function endGame(won) {
+    gameActive = false;
+    clearInterval(timerInterval);
+
+    document.getElementById('guessRow').classList.add('hidden');
+    document.getElementById('kbHint').classList.add('hidden');
+    document.getElementById('guessError').classList.add('hidden');
+
+    const card = document.getElementById('resultCard');
+    card.classList.remove('hidden');
+
+    if (won) {
+        card.innerHTML = `
+            <div class="result-title">Reasoning Sequence Complete</div>
+            <div class="result-sub">
+                Pattern alignment achieved successfully.
+                The reasoning chain was decoded.
+            </div>
+            <div class="result-word">${secretWord}</div>
+            <button class="btn-reset" onclick="resetGame()">START NEW SESSION</button>
+        `;
+    } else {
+        card.innerHTML = `
+            <div class="result-title">Inference Interrupted</div>
+            <div class="result-sub">
+                The reasoning sequence remained unresolved.
+            </div>
+            <div class="result-word">${secretWord}</div>
+            <button class="btn-reset" onclick="resetGame()">RETRY SESSION</button>
+        `;
+    }
+}
+
+function resetGame() {
+    clearInterval(timerInterval);
+
+    document.getElementById('setupCard').classList.remove('hidden');
+    document.getElementById('scoreBar').classList.add('hidden');
+    document.getElementById('historySection').classList.add('hidden');
+    document.getElementById('resultCard').classList.add('hidden');
+}
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && gameActive) {
+        submitGuess();
+    }
+});

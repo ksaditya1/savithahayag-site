@@ -1,0 +1,149 @@
+body {
+    margin: 0;
+    font-family: Segoe UI, sans-serif;
+    background: #0b1f3a;
+    color: white;
+}
+
+.navbar {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:16px 40px;
+    background: rgba(4, 18, 38, 0.82);
+    backdrop-filter: blur(14px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    color: inherit;
+}
+
+.eyebrow {
+    color: #7ea5d9;
+    letter-spacing: 0.24em;
+    font-size: 13px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.brand-name {
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: 0.01em;
+    color: white;
+}
+.brand-sub {
+    color: #d9a441;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    margin-top: 4px;
+    text-align: center;
+}
+
+nav a {
+    color: white;
+    margin-left: 34px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+nav a:hover {
+    color: #d9a441;
+}
+
+.hero {
+    padding:70px 20px 110px;
+    text-align:center;
+}
+
+.hero h1 {
+    font-size: 58px;
+    max-width: 1100px;
+    margin: auto;
+    line-height: 1.08;
+}
+.hero p {
+    max-width:700px;
+    margin:auto;
+    color:#d0d8e0;
+}
+
+.cta {
+    margin-top:30px;
+}
+
+.btn {
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.primary {
+    background:#d9a441;
+    color:black;
+}
+
+.secondary {
+    background:white;
+    color:#08172d;
+}
+
+section {
+    max-width:1100px;
+    margin:auto;
+    padding:70px 20px;
+}
+
+.card {
+    background:#122948;
+    padding:20px;
+    border-radius:12px;
+}
+
+footer {
+    text-align:center;
+    padding:40px;
+    background:#06111f;
+}
+.brand img {
+    height: 72px;
+    width: auto;
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 14px 28px;
+    background: #d9a441;
+    color: #001b3a;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    background: #e5b654;
+}
+
