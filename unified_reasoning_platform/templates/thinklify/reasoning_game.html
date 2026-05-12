@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Thinklify Reasoning Lab{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/reasoning_game.css' %}">
+
+<div class="reasoning-page">
+    <section class="thinklify-game-hero">
+        <div class="hero-wrap">
+            <div class="hero-badge">THINKLIFY PRODUCT</div>
+            <h1>Thinklify Reasoning Lab</h1>
+            <p class="hero-sub">
+                Train structured inference through adaptive deduction challenges.
+            </p>
+        </div>
+    </section>
+
+    <section class="game-shell">
+
+        <div class="rules-card">
+            <h2>Reasoning Rules</h2>
+            <p><strong>MATCH</strong> — at least one correct letter in correct position</p>
+            <p><strong>MISPLACED</strong> — no exact match, but some guessed letters exist</p>
+            <p><strong>ABSENT</strong> — no guessed letters exist in target sequence</p>
+        </div>
+
+        <div class="setup-card" id="setupCard">
+            <label>Select Sequence Length</label>
+
+            <div class="word-len-btns">
+                <button onclick="setLen(3,this)">3</button>
+                <button onclick="setLen(4,this)">4</button>
+                <button onclick="setLen(5,this)" class="active">5</button>
+                <button onclick="setLen(6,this)">6</button>
+                <button onclick="setLen(7,this)">7</button>
+            </div>
+
+            <button class="btn-primary full-btn" onclick="startGame()">
+                START REASONING SESSION
+            </button>
+        </div>
+
+        <div class="score-bar hidden" id="scoreBar">
+            <div>
+                <div class="score-label">Score</div>
+                <div class="score-value" id="scoreVal">100</div>
+            </div>
+
+            <div>
+                <div class="score-label">Timer</div>
+                <div class="score-mini" id="timerVal">00:15</div>
+            </div>
+
+            <div>
+                <div class="score-label">Attempts</div>
+                <div class="score-mini" id="attemptsVal">0 attempts</div>
+            </div>
+        </div>
+
+        <div class="guess-row hidden" id="guessRow">
+            <input
+                id="guessInput"
+                maxlength="7"
+                placeholder="ENTER YOUR INFERENCE"
+            >
+            <button class="btn-primary" onclick="submitGuess()">INFER</button>
+        </div>
+
+        <div class="error-msg hidden" id="guessError"></div>
+
+        <div id="historySection" class="hidden">
+            <h3>Inference History</h3>
+            <div class="history" id="historyList"></div>
+        </div>
+
+        <div id="resultCard" class="hidden result-card"></div>
+
+    </section>
+</div>
+
+<script src="{% static 'js/reasoning_game.js' %}"></script>
+{% endblock %}
