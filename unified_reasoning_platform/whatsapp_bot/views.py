@@ -1,4 +1,4 @@
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import json
@@ -9,15 +9,18 @@ from .services import send_whatsapp_message
 @csrf_exempt
 def whatsapp_webhook(request):
 
+    # META WEBHOOK VERIFICATION
     if request.method == "GET":
         verify_token = request.GET.get("hub.verify_token")
         challenge = request.GET.get("hub.challenge")
+        mode = request.GET.get("hub.mode")
 
-        if verify_token == settings.VERIFY_TOKEN:
-            return JsonResponse(challenge, safe=False)
+        if mode == "subscribe" and verify_token == settings.VERIFY_TOKEN:
+            return HttpResponse(challenge)
 
         return JsonResponse({"error": "Invalid verify token"}, status=403)
 
+    # INCOMING WHATSAPP MESSAGES
     elif request.method == "POST":
         try:
             body = json.loads(request.body)
@@ -41,3 +44,5 @@ def whatsapp_webhook(request):
 
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Method not allowed"}, status=405)
