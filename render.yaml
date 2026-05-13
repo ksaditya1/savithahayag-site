@@ -3,6 +3,7 @@ services:
     name: savithahayag-django
     env: python
     plan: free
+    rootDir: unified_reasoning_platform
     buildCommand: "./build.sh"
     startCommand: "gunicorn backend.wsgi:application"
     envVars:
