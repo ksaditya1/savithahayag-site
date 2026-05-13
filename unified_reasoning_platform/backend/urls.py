@@ -7,4 +7,5 @@ urlpatterns = [
     path('', home, name='home'),
     path('thinklify/', include('thinklify.urls')),
     path('active-pilots/', include('governance.urls')),
+    path('webhook/', include('whatsapp_bot.urls')),
 ]
