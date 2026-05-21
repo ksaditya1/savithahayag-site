@@ -21,13 +21,14 @@ body {
 .brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
+
 header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 20px 40px;
+    align-items: center;
+    padding: 20px 50px;
 }
 
 .eyebrow {
@@ -39,10 +40,12 @@ header {
 }
 
 .brand-name {
-    color: #f4b400;
-    font-size: 1.2rem;
-    font-weight: 700;
-    white-space: nowrap;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1;
+    margin: 0;
+    padding: 0;
 }
 .brand-sub {
     color: #d9a441;
@@ -124,7 +127,9 @@ footer {
     background:#06111f;
 }
 .brand img {
-    height: 64px;
+    height: 56px;
+    width: auto;
+    display: block;
 }
 
 .brand-text {
