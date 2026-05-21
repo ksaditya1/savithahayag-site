@@ -21,9 +21,7 @@ body {
 .brand {
     display: flex;
     align-items: center;
-    gap: 16px;
-    text-decoration: none;
-    color: inherit;
+    gap: 12px;
 }
 
 .eyebrow {
@@ -35,10 +33,10 @@ body {
 }
 
 .brand-name {
-    font-weight: 800;
-    font-size: 28px;
-    letter-spacing: 0.01em;
-    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #f4b400;
+    letter-spacing: 0.5px;
 }
 .brand-sub {
     color: #d9a441;
@@ -120,8 +118,7 @@ footer {
     background:#06111f;
 }
 .brand img {
-    height: 108px;
-    width: auto;
+    height: 64px;
 }
 
 .brand-text {
