@@ -23,6 +23,12 @@ body {
     align-items: center;
     gap: 12px;
 }
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+}
 
 .eyebrow {
     color: #7ea5d9;
@@ -33,10 +39,10 @@ body {
 }
 
 .brand-name {
+    color: #f4b400;
     font-size: 1.2rem;
     font-weight: 700;
-    color: #f4b400;
-    letter-spacing: 0.5px;
+    white-space: nowrap;
 }
 .brand-sub {
     color: #d9a441;
